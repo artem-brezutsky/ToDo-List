@@ -1,9 +1,21 @@
 <template>
   <div class="app">
-    <form>
-      <input class="input" type="text" placeholder="Название">
-      <input class="input" type="text" placeholder="Описание">
-      <button class="btn">Создать</button>
+    <form @submit.prevent>
+      <input
+          v-bind:value="title"
+          @input="this.title = $event.target.value"
+          class="input"
+          type="text"
+          placeholder="Название"
+      >
+      <input
+          v-bind:value="body"
+          @input="this.body = $event.target.value"
+          class="input"
+          type="text"
+          placeholder="Описание"
+      >
+      <button class="btn" @click="createPost">Создать</button>
     </form>
     <div class="post" v-for="post in posts">
       <div><strong>Название: </strong>{{ post.title }}</div>
@@ -20,15 +32,27 @@ export default {
         {id: 1, title: 'JavaScript 1', body: 'Описание 1'},
         {id: 2, title: 'JavaScript 2', body: 'Описание 2'},
         {id: 3, title: 'JavaScript 3', body: 'Описание 3'},
-      ]
+      ],
+      title: '',
+      body: '',
     }
   },
   methods: {
-    addLike() {
-      this.likes++
-    },
-    addDislike() {
-      this.disLikes++
+    createPost() {
+      const newPost = {
+        id: Date.now(),
+        title: this.title,
+        body: this.body,
+      }
+      if (newPost.body !== '' || newPost.title !== '') {
+        this.posts.push(newPost)
+        this.title = '';
+        this.body = '';
+
+        return true
+      }
+
+      alert('Пустые поля!!!');
     },
   },
 }
